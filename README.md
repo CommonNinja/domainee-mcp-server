@@ -46,13 +46,27 @@ Claude Desktop / Cursor / Windsurf (any HTTP-transport client):
 
 ## Tools
 
-**Domains** — `list_domains`, `get_domain`, `create_domain`, `update_domain`,
-`delete_domain`, `check_domain` (force an immediate DNS/SSL probe)
+The server exposes two tiers. The **16 free diagnostic tools are always
+available with no auth**; the **11 workspace tools require a Bearer API key** and
+are only registered when a token is present. An unauthenticated `tools/list`
+returns the 16 free tools; add a key to get all 27.
 
-**Webhook endpoints** — `list_webhook_endpoints`, `create_webhook_endpoint`,
-`delete_webhook_endpoint`
+**Workspace tools (11, require a Bearer API key)**
 
-**DNS checks** — `dns_check_records_exist`, `dns_check_records_match_exactly`
+- Domains — `list_domains`, `get_domain`, `create_domain`, `update_domain`,
+  `delete_domain`, `check_domain` (force an immediate DNS/SSL probe)
+- Webhook endpoints — `list_webhook_endpoints`, `create_webhook_endpoint`,
+  `delete_webhook_endpoint`
+- DNS checks — `dns_check_records_exist`, `dns_check_records_match_exactly`
+
+**Free diagnostic tools (16, no key)**
+
+Read-only SSL/DNS/WHOIS lookups: `tools_ssl_check`, `tools_dns_record_lookup`,
+`tools_whois_lookup`, `tools_cname_lookup`, `tools_http_header_checker`,
+`tools_dns_propagation_checker`, `tools_redirect_checker`, `tools_spf_record_checker`,
+`tools_dkim_record_checker`, `tools_dmarc_record_checker`, `tools_txt_record_lookup`,
+`tools_domain_age_checker`, `tools_domain_availability_checker`, `tools_subdomain_finder`,
+`tools_reverse_ip_lookup`, `tools_website_status_checker`.
 
 ## Pricing
 
