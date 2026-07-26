@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "dev.domainee/domainee",
+  "description": "Custom domains API for SaaS: connect, verify, and manage customer domains, SSL, and DNS",
+  "version": "1.0.0",
+  "websiteUrl": "https://domainee.dev/mcp",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.domainee.dev/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer token using a Domainee API key, e.g. `Bearer sk_live_...`. Create one at https://domainee.dev/developers",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
