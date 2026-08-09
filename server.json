@@ -11,8 +11,8 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Bearer token using a Domainee API key, e.g. `Bearer sk_live_...`. Create one at https://domainee.dev/developers",
-          "isRequired": true,
+          "description": "Optional. Bearer token using a Domainee API key, e.g. `Bearer sk_live_...`. Without it the 16 free diagnostic tools still work and tools/list enumerates them; with it you also get the 11 workspace tools. Create one at https://domainee.dev/developers",
+          "isRequired": false,
           "isSecret": true
         }
       ]
