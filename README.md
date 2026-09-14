@@ -2,7 +2,7 @@
 
 > Custom domains API for SaaS, exposed as Model Context Protocol tools. Connect,
 > verify, and manage **your customers'** domains, SSL, and DNS from any MCP client.
-> 50 domains free.
+> 20 domains free.
 
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-dev.domainee%2Fdomainee-blue)](https://registry.modelcontextprotocol.io)
 [![Glama](https://img.shields.io/badge/Glama-healthy-green)](https://glama.ai/mcp/connectors/dev.domainee/domainee)
@@ -10,7 +10,7 @@
 [![Claude Directory](https://img.shields.io/badge/Claude_Directory-community-orange)](https://domainee.dev/mcp)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
-Domainee is a custom domains API for SaaS with a native MCP server — 50 domains and
+Domainee is a custom domains API for SaaS with a native MCP server, 20 domains and
 100 GB free. This is the hosted, stateless [Model Context Protocol](https://modelcontextprotocol.io)
 server that lets AI agents (Claude, Cursor, Windsurf, and any MCP-aware client) drive
 the Domainee API directly: onboard a customer's hostname and get back the CNAME target,
@@ -40,9 +40,9 @@ https://mcp.domainee.dev/mcp
 
 Remote, streamable HTTP, stateless. No install, no local process, nothing to deploy.
 
-**Auth is optional for discovery.** `initialize`, `tools/list`, and all 16 free
+**Auth is optional for discovery.** `initialize`, `tools/list`, and all 18 free
 diagnostic tools answer anonymously. A Domainee API key (`sk_live_…`, minted at
-<https://domainee.dev/developers>) unlocks the 11 workspace tools; calling one without a
+<https://domainee.dev/developers>) unlocks the 12 workspace tools; calling one without a
 key returns `401` plus a `WWW-Authenticate` header pointing at our OAuth metadata, which
 is what starts the OAuth flow in MCP clients. OAuth is also supported end to end
 (RFC 9728 protected-resource metadata + RFC 8414 authorization-server metadata).
@@ -69,7 +69,7 @@ Claude Desktop / Cursor / Windsurf (any HTTP-transport client):
 }
 ```
 
-Try it with no key at all — this returns the 16 free tools as a `text/event-stream`
+Try it with no key at all — this returns the 18 free tools as a `text/event-stream`
 response:
 
 ```bash
@@ -78,16 +78,16 @@ curl -s https://mcp.domainee.dev/mcp \
   -H 'Accept: application/json, text/event-stream' \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' \
   | grep '^data: ' | sed 's/^data: //' | jq '.result.tools | length'
-# 16
+# 18
 ```
 
 ## Tools
 
-27 tools in two tiers. The **16 free diagnostic tools need no key**; the **11 workspace
+30 tools in two tiers. The **18 free diagnostic tools need no key**; the **12 workspace
 tools require a Bearer** and are only registered when a token is present, so an
-unauthenticated `tools/list` returns 16 and an authenticated one returns 27.
+unauthenticated `tools/list` returns 18 and an authenticated one returns 30.
 
-### Workspace tools (11 — Bearer API key required)
+### Workspace tools (12, Bearer API key required)
 
 | Tool | What it does | Key arguments |
 |---|---|---|
@@ -96,6 +96,7 @@ unauthenticated `tools/list` returns 16 and an authenticated one returns 27.
 | `create_domain` | Register a customer hostname for proxy or redirect through the edge. Returns preflight warnings (CAA, unreachable origin). | `hostname`, `originUrl`, `mode` (`proxy`/`redirect`), `keepHost`, `redirectWww`, `redirectStatus`, `metadata` |
 | `update_domain` | Edit a domain. Hostname is immutable — delete and recreate to change it. | `id` + any of `originUrl`, `mode`, `keepHost`, `redirectWww`, `redirectStatus`, `metadata` |
 | `delete_domain` | Stop routing a hostname; the edge stops serving within ~60s. | `id` |
+| `get_connect_instructions` | DNS setup steps for the provider actually serving the customer's domain: exact record type and name, where the record editor is, provider gotchas (Cloudflare proxy, GoDaddy parked A record). Includes a one-click Domain Connect link when the provider supports it. | `id` |
 | `check_domain` | Force an immediate DNS/SSL probe instead of waiting for the next monitor tick. Flips `pending` → `verified`. | `id` |
 | `list_webhook_endpoints` | List webhook endpoints. Signing secrets are never included — they are revealed once, at create time. | — |
 | `create_webhook_endpoint` | Register an HTTPS URL that Domainee POSTs domain events to. Returns the signing secret once. | `url`, `events[]` (empty = all) |
@@ -108,18 +109,19 @@ case-insensitive and trailing dots are stripped. Webhook events are
 `domain.created`, `domain.verified`, `domain.failed`, `domain.expired`,
 `domain.deleted`, `domain.monitor_updated`.
 
-### Free diagnostic tools (16 — no key, no signup)
+### Free diagnostic tools (18, no key, no signup)
 
 Read-only SSL / DNS / WHOIS lookups, usable by any agent against any domain:
 
-`tools_ssl_check`, `tools_dns_record_lookup`, `tools_whois_lookup`,
+`tools_ssl_check`, `tools_dns_provider_lookup`, `tools_domain_connect_checker`,
+`tools_dns_record_lookup`, `tools_whois_lookup`,
 `tools_cname_lookup`, `tools_http_header_checker`, `tools_dns_propagation_checker`,
 `tools_redirect_checker`, `tools_spf_record_checker`, `tools_dkim_record_checker`,
 `tools_dmarc_record_checker`, `tools_txt_record_lookup`, `tools_domain_age_checker`,
 `tools_domain_availability_checker`, `tools_subdomain_finder`,
 `tools_reverse_ip_lookup`, `tools_website_status_checker`.
 
-The same 16 are available as keyless REST endpoints at
+The same 18 are available as keyless REST endpoints at
 `https://api.domainee.dev/v1/tools/<name>` — see <https://domainee.dev/free-apis>.
 
 ## What agents do with it
@@ -141,8 +143,9 @@ call of up to 50 records.
 
 ## Pricing
 
-Free tier: 50 custom domains + 100 GB bandwidth/month, no credit card. Usage pricing
-beyond that at <https://domainee.dev/pricing>. The 16 diagnostic tools are free and
+Free tier: 20 custom domains + 100 GB bandwidth/month, with no expiry. You add a card
+when you connect your first domain; it's charged $0 inside the free tier. Usage pricing
+beyond that at <https://domainee.dev/pricing>. The 18 diagnostic tools are free and
 keyless regardless.
 
 ## Listings
