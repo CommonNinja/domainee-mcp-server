@@ -13,8 +13,9 @@
 Domainee is a custom domains API for SaaS with a native MCP server, 20 domains and
 100 GB free. This is the hosted, stateless [Model Context Protocol](https://modelcontextprotocol.io)
 server that lets AI agents (Claude, Cursor, Windsurf, and any MCP-aware client) drive
-the Domainee API directly: onboard a customer's hostname and get back the CNAME target,
-force DNS and SSL probes, debug "my domain isn't working" tickets, and manage webhook
+the Domainee API directly: onboard a customer's hostname, hand them DNS steps written
+for their actual DNS provider (or a one-click approval link when their DNS is on
+Cloudflare), force DNS and SSL probes, debug "my domain isn't working" tickets, and manage webhook
 endpoints. Same Bearer key, rate limits, and workspace as the REST API. Nothing to deploy.
 
 ## This is not a registrar MCP server
@@ -96,7 +97,7 @@ unauthenticated `tools/list` returns 18 and an authenticated one returns 30.
 | `create_domain` | Register a customer hostname for proxy or redirect through the edge. Returns preflight warnings (CAA, unreachable origin). | `hostname`, `originUrl`, `mode` (`proxy`/`redirect`), `keepHost`, `redirectWww`, `redirectStatus`, `metadata` |
 | `update_domain` | Edit a domain. Hostname is immutable — delete and recreate to change it. | `id` + any of `originUrl`, `mode`, `keepHost`, `redirectWww`, `redirectStatus`, `metadata` |
 | `delete_domain` | Stop routing a hostname; the edge stops serving within ~60s. | `id` |
-| `get_connect_instructions` | DNS setup steps for the provider actually serving the customer's domain: exact record type and name, where the record editor is, provider gotchas (Cloudflare proxy, GoDaddy parked A record). Includes a one-click Domain Connect link when the provider supports it. | `id` |
+| `get_connect_instructions` | DNS setup steps for the provider actually serving the customer's domain: exact record type and name, where the record editor is, provider gotchas (Cloudflare proxy, GoDaddy parked A record). Also returns `domainConnect`: a one-click link where the DNS provider has enabled Domainee's Domain Connect templates (live at Cloudflare for all accounts, and Glauca Digital), otherwise a `reason`. Call `check_domain` once the customer approves. | `id` |
 | `check_domain` | Force an immediate DNS/SSL probe instead of waiting for the next monitor tick. Flips `pending` → `verified`. | `id` |
 | `list_webhook_endpoints` | List webhook endpoints. Signing secrets are never included — they are revealed once, at create time. | — |
 | `create_webhook_endpoint` | Register an HTTPS URL that Domainee POSTs domain events to. Returns the signing secret once. | `url`, `events[]` (empty = all) |
@@ -127,9 +128,11 @@ The same 18 are available as keyless REST endpoints at
 ## What agents do with it
 
 **Onboard a customer domain.** "Connect `shop.acme.com` to `https://acme.myapp.com`."
-The agent calls `create_domain`, reads the returned CNAME target out of `dnsRecords`,
-and tells the customer exactly what to publish. Once they say they've done it, it calls
-`check_domain` to verify immediately rather than waiting for the monitor.
+The agent calls `create_domain`, then `get_connect_instructions` to tell the customer
+exactly what to publish, in the words their DNS provider's panel uses. If their DNS is on
+Cloudflare, it can hand them a one-click link instead: they approve the records on
+Cloudflare's own screen and type nothing. Once they're done, it calls `check_domain` to
+verify immediately rather than waiting for the monitor.
 
 **Debug a broken domain.** "Why is `shop.acme.com` showing a certificate error?" The
 agent calls `get_domain` for our view of the status, then `tools_cname_lookup` and
