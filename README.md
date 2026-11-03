@@ -6,7 +6,6 @@
 
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-dev.domainee%2Fdomainee-blue)](https://registry.modelcontextprotocol.io)
 [![Glama](https://img.shields.io/badge/Glama-healthy-green)](https://glama.ai/mcp/connectors/dev.domainee/domainee)
-[![Smithery](https://img.shields.io/badge/Smithery-80%2F100-green)](https://smithery.ai/server/admin-cl6n/domainee)
 [![Claude Directory](https://img.shields.io/badge/Claude_Directory-community-orange)](https://domainee.dev/mcp)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
@@ -158,7 +157,6 @@ keyless regardless.
 
 - MCP Registry — `dev.domainee/domainee` on <https://registry.modelcontextprotocol.io>
 - Glama — <https://glama.ai/mcp/connectors/dev.domainee/domainee>
-- Smithery — <https://smithery.ai/server/admin-cl6n/domainee>
 - Claude connector directory — listed as a community connector; find it in Claude under
   Settings → Connectors
 
