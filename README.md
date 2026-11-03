@@ -43,7 +43,7 @@ Remote, streamable HTTP, stateless. No install, no local process, nothing to dep
 
 **Auth is optional for discovery.** `initialize`, `tools/list`, and all 18 free
 diagnostic tools answer anonymously. A Domainee API key (`sk_live_…`, minted at
-<https://domainee.dev/developers>) unlocks the 12 workspace tools; calling one without a
+<https://domainee.dev/developers>) unlocks the 15 workspace tools; calling one without a
 key returns `401` plus a `WWW-Authenticate` header pointing at our OAuth metadata, which
 is what starts the OAuth flow in MCP clients. OAuth is also supported end to end
 (RFC 9728 protected-resource metadata + RFC 8414 authorization-server metadata).
@@ -84,11 +84,11 @@ curl -s https://mcp.domainee.dev/mcp \
 
 ## Tools
 
-30 tools in two tiers. The **18 free diagnostic tools need no key**; the **12 workspace
+33 tools in two tiers. The **18 free diagnostic tools need no key**; the **15 workspace
 tools require a Bearer** and are only registered when a token is present, so an
-unauthenticated `tools/list` returns 18 and an authenticated one returns 30.
+unauthenticated `tools/list` returns 18 and an authenticated one returns 33.
 
-### Workspace tools (12, Bearer API key required)
+### Workspace tools (15, Bearer API key required)
 
 | Tool | What it does | Key arguments |
 |---|---|---|
@@ -104,6 +104,9 @@ unauthenticated `tools/list` returns 18 and an authenticated one returns 30.
 | `delete_webhook_endpoint` | Stop sending events; in-flight retries are dropped. | `id` |
 | `dns_check_records_exist` | Per record, `match: true` if **at least one** DNS value equals the expected one. Tolerates extra records alongside the CNAME. Up to 50 per call. | `records[]` of `{ address, type, match_against }` |
 | `dns_check_records_match_exactly` | Stricter: `match: true` only if **every** returned value matches. Use when the customer must point only at you. | `records[]` |
+| `get_origin_secret` | Whether the workspace's origin secret is on. When it is, proxied requests carry it in the `x-domainee-origin-secret` header so the origin can reject traffic that didn't come through Domainee. | — |
+| `rotate_origin_secret` | Turn the origin secret on, or replace it. Returns the new secret once. Origins checking the old one reject requests once the edge picks up the new one, within about a minute. | — |
+| `disable_origin_secret` | Turn the origin secret off. Origins that require it start rejecting traffic within about a minute. | — |
 
 `type` accepts `a`, `aaaa`, `cname`, `mx`, `txt`, `ns`, `caa`. Comparison is
 case-insensitive and trailing dots are stripped. Webhook events are
