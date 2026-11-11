@@ -1,0 +1,18 @@
+{
+  "name": "domainee",
+  "description": "Domainee's Claude Code plugin: the Domainee MCP server for custom domains, SSL and DNS.",
+  "owner": {
+    "name": "Domainee",
+    "email": "contact@domainee.dev"
+  },
+  "plugins": [
+    {
+      "name": "domainee",
+      "source": "./",
+      "description": "Custom domains API for SaaS: connect, verify, and manage customer domains, SSL, and DNS. 18 diagnostic tools work with no key.",
+      "version": "1.0.2",
+      "category": "development",
+      "homepage": "https://domainee.dev/mcp"
+    }
+  ]
+}

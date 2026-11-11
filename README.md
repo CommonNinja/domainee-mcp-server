@@ -49,7 +49,13 @@ is what starts the OAuth flow in MCP clients. OAuth is also supported end to end
 
 ## Install
 
-Claude Code / CLI:
+Claude Code, as a plugin (signs in with OAuth, or works keyless for the 18 free tools):
+
+```bash
+/plugin install domainee --marketplace CommonNinja/domainee-mcp-server
+```
+
+Claude Code / CLI, with an API key:
 
 ```bash
 claude mcp add --transport http domainee https://mcp.domainee.dev/mcp \
@@ -171,7 +177,7 @@ keyless regardless.
 ## About this repo
 
 Discovery and documentation only — the server is hosted, so there is nothing to clone
-or run. It holds the `server.json` that the MCP Registry reads and this README. The
+or run. It holds the `server.json` that the MCP Registry reads, the Claude Code, Cursor and Gemini CLI plugin manifests, and this README. The
 implementation lives in the Domainee monorepo.
 
 Issues and questions are welcome here.
